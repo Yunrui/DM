@@ -13,6 +13,27 @@ def greaterthanday(day1, day2):
   return date1 > date2;
 
   
+
+@outputSchema("yes:chararray")
+def sessionCount(times):
+	c = []
+	for item in times:
+		string2 = str(item)[3:-3];
+		string2 = string2.split(".")[0]
+		c.insert(0, datetime.strptime(string2, '%Y-%m-%d %H:%M:%S'));
+	c.sort();
+
+	last = datetime.strptime("1999-12-31", '%Y-%m-%d');
+	sessionCount = 0;
+	for item in c:
+		current  = item;
+		delta =	(current - last);
+		if (delta.days > 0 or delta.seconds > 1800):
+			last = current;
+			sessionCount = sessionCount + 1;
+	return sessionCount;
+		
+
 @outputSchema("yes:chararray")
 def mininumDate(days):
 	string2 = "9999-12-13"
