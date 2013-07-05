@@ -13,6 +13,19 @@ def greaterthanday(day1, day2):
   return date1 > date2;
 
   
+@outputSchema("yes:chararray")
+def avgwithoutzero(lengths):
+	l = [];
+	for item in lengths:
+		for length in item:
+			if (length > 0):
+				l.insert(0, length);
+	
+	if (len(l) == 0):
+		return 0;
+	else:
+		return sum(l)/len(l);
+
 
 @outputSchema("yes:chararray")
 def sessionCount(times):
@@ -29,10 +42,50 @@ def sessionCount(times):
 		current  = item;
 		delta =	(current - last);
 		if (delta.days > 0 or delta.seconds > 1800):
-			last = current;
 			sessionCount = sessionCount + 1;
+		last = current;
 	return sessionCount;
 		
+
+@outputSchema("yes:chararray")
+def sessionLength(times):
+	c = []
+	for item in times:
+		string2 = str(item)[3:-3];
+		string2 = string2.split(".")[0]
+		c.insert(0, datetime.strptime(string2, '%Y-%m-%d %H:%M:%S'));
+	c.sort();
+	
+	if (len(c) == 0):
+		return "empty list";
+	
+	sessionlength = []
+	sessionstart = None;
+	last = None;
+	for item in c:
+		if (sessionstart == None):
+			sessionstart = item;
+			last = item;
+
+		current  = item;
+		delta =	(current - last);
+		if (delta.days > 0 or delta.seconds > 1800):
+			length = (last - sessionstart).seconds + (last-sessionstart).days*24*3600;
+			if (length > 120): # any session > 2 minutes makes sense to me
+				sessionlength.insert(0, length);
+			sessionstart = current;
+
+		last = current;
+
+	if (len(sessionlength) == 0):
+		length = (last - sessionstart).seconds + (last-sessionstart).days*24*3600;
+		if (length > 120): # any session > 2 minutes makes sense to me
+			sessionlength.insert(0, length);
+	
+	if (len(sessionlength) == 0):
+		return 0;
+	return sum(sessionlength)/len(sessionlength);
+
 
 @outputSchema("yes:chararray")
 def mininumDate(days):

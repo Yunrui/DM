@@ -1,4 +1,6 @@
-
+Register '/home/hadoop/DM/myUDF.py' using jython as myfuncs;
+User = load 'hbase://spouser' USING org.apache.pig.backend.hadoop.hbase.HBaseStorage('profile:firstlogin', '-loadKey true') as (user:chararray, week:chararray);
+WeekGroup = group User by week;
 Register '/home/hadoop/DM/myUDF.py' using jython as myfuncs;
 User = load 'hbase://spouser' USING org.apache.pig.backend.hadoop.hbase.HBaseStorage('profile:firstlogin', '-loadKey true') as (user:chararray, week:chararray);
 WeekGroup = group User by week;
@@ -10,11 +12,11 @@ Path2 = foreach Path generate userLogin, timestampUtc, myfuncs.week(timestampUtc
 Path4 = group Path2 by (userLogin, week);
 Path5 = foreach Path4
 {
-	D = distinct Path2.timestampUtc;
-	Generate group.userLogin, group.week, myfuncs.sessionCount(D) as count; 
+        D = distinct Path2.timestampUtc;
+        Generate group.userLogin, group.week, myfuncs.sessionCount(D) as count, myfuncs.sessionLength(D) as length;
  };
 Path6 = join Path5 by userLogin, User by user;
 Path7= group Path6 by (User::week, Path5::week);
-Path8 = foreach Path7 generate group, COUNT(Path6);
-store Path8 into 'hdfs://v2namenode:8020/spo/tmp/sposession' using PigStorage(',');
+Path8 = foreach Path7 generate group, COUNT(Path6), myfuncs.avgwithoutzero(Path6.length);
 
+store Path8 into 'hdfs://v2namenode:8020/spo/tmp/sposession' using PigStorage(',');
