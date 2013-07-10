@@ -13,6 +13,23 @@ def greaterthanday(day1, day2):
   return date1 > date2;
 
   
+@outputSchema("result:double")
+def percentile(values, percent):
+	l = []
+	for item in values:
+		l.insert(0, item);
+	l.sort();
+	return l[len(l) * percent / 100];
+
+
+@outputSchema("page:chararray")
+def pagename(documentpath):
+	s = documentpath.split("/");
+	s = s[len(s)-1];
+	s = s.split(".");
+	return s[0];
+
+
 @outputSchema("yes:chararray")
 def avgwithoutzero(lengths):
 	l = [];
