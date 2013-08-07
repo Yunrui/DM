@@ -1,5 +1,6 @@
 cd /tmp
 
+sudo -u hdfs hadoop fs -rmr /spo/request/requestcommon
 sudo -u hdfs hadoop fs -rmr /spo/tmp/sposession
 sudo -u hdfs hadoop fs -rmr /spo/tmp/sporequest
 sudo -u hdfs hadoop fs -rmr /spo/tmp/sporequestMonthCount
