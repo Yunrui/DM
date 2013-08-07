@@ -1,4 +1,3 @@
-
 import sys
 data = sys.stdin.readlines()
 
@@ -7,6 +6,5 @@ for line in data:
     key = parts[0][1:];
     column = parts[1][0:-1];
     value1 = parts[2][0:-1];
-
-    print "put 'sporequest','" + key + "','data:" + column + "','" + value1 + "'"
-
+#    print "delete 'sporequest','" + key + "','data:count_"+column + "'"
+    print "put 'sporequest','" + key + "','data:count_" + column + "','" + value1 + "'"

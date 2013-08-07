@@ -6,7 +6,7 @@ User = load 'hbase://spouser' USING org.apache.pig.backend.hadoop.hbase.HBaseSto
 WeekGroup = group User by week;
 userCount = foreach WeekGroup generate group as week, COUNT(User);
 STORE userCount INTO 'hbase://sposession' USING org.apache.pig.backend.hadoop.hbase.HBaseStorage('data:usercount');
-Path0 = load 'hdfs://v2namenode:8020/spo/requestcommon' using PigStorage('\t') as (timestampUtc:chararray, userLogin:chararray, documentPath:chararray, referrerUrl:chararray, requestType:chararray, duration:double);
+Path0 = load 'hdfs://v2namenode:8020/spo/request/requestcommon' using PigStorage('\t') as (timestampUtc:chararray, userLogin:chararray, documentPath:chararray, referrerUrl:chararray, requestType:chararray, duration:double);
 Path = filter Path0 by (userLogin matches '.*@.*') AND (NOT documentPath matches '.*getsitecollectionservice.asmx.*');
 Path2 = foreach Path generate userLogin, timestampUtc, myfuncs.week(timestampUtc) as week;
 Path4 = group Path2 by (userLogin, week);
