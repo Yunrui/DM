@@ -4,7 +4,7 @@ Path = load 'hdfs://v2namenode:8020/spo/request/requestcommon' using PigStorage(
 Path0 = filter Path by (documentPath matches '.*/15/.*') AND (documentPath matches '.*.aspx') AND (NOT documentPath matches '.*authenticate.aspx') AND (NOT documentPath matches '.*signout.aspx');
 Path11 = foreach Path0 generate myfuncs.pagename(documentPath) as doc, timestampUtc;
 Path1 = filter Path11 by (NOT doc matches 'picker') AND (NOT doc matches 'accessdenied');
-GroupPath = group Path1 by doc;
+GroupPath = group Path1 by doc; 
 PathCount = foreach GroupPath generate group, COUNT(Path1) as count;
 STORE PathCount INTO 'hbase://sporequest' USING org.apache.pig.backend.hadoop.hbase.HBaseStorage('data:count');
 FPath2 = foreach Path1 generate doc, myfuncs.day(timestampUtc) as day;

@@ -130,3 +130,21 @@ def isSameMonth(date1, date2):
 	d2 = datetime.strptime(date2, '%Y-%m-%d');
 	return d1.year == d2.year and d1.month == d2.month;
 
+
+@outputSchema("minutes:int")
+def o365sessionlength(times):
+    c = []
+    for item in times:
+        string2 = str(item)[3:-3];
+        string2 = string2.split(".")[0]
+        c.insert(0, datetime.strptime(string2, '%m/%d/%Y %H:%M:%S %p'));
+    c.sort();
+	
+    if (len(c) == 0):
+        return "empty list";
+	
+    interval = c[len(c)-1]-c[0];
+    length = interval.seconds + interval.days*24*3600;
+    return length/60;
+
+
